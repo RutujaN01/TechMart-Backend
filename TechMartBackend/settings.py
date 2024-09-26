@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&-8n9cjhbljmf$y(ud4+lu&%k#c%d&=34p&*m7#t(cekvnp6o#'
 GOOGLE_OAUTH2_CLIENT_ID = 'YOUR_GOOGLE_OAUTH2_CLIENT_ID'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'YOUR_GOOGLE_OAUTH2_CLIENT_SECRET'
+MONGODB_URI = 'OUR_MONGODB_URI'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +43,10 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'users.apps.UsersConfig',
+    'items.apps.ItemsConfig',
+    'wishlists.apps.WishlistsConfig',
+    'demo.apps.DemoConfig'
 ]
 
 MIDDLEWARE = [
