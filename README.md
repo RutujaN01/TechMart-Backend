@@ -15,8 +15,7 @@
   - `python manage.py runserver 8081`
 - Access the application at http://127.0.0.1:8081/  
 ### Contribution Guidelines
-- Fork the repository and create your branch from main.
-- Ensure your code follows the project's coding standards.
+- Clone the repository and create your branch from main.
 - Write clear, concise commit messages.
 - Test your changes thoroughly.
 - Submit a pull request with a detailed description of your changes.
