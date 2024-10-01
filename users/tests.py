@@ -109,3 +109,4 @@ class UserModelTest(TestCase):
         user.save()
         updated_user = User.objects.get(id=self.user_id)
         self.assertIn('admin', updated_user.roles)
+        user.roles.remove('admin')
