@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from oauth2_provider import urls as oauth2_urls
 
+from demo import urls as demo_urls
+from users import urls as users_urls
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('o/', include(oauth2_urls)),
-    path('demo/', include('demo.urls')),
+    path('demo/', include(demo_urls)),
     # path('items/', include('items.urls')),
-    # path('users/', include('users.urls')),
+    path('users/', include(users_urls)),
     # path('wishlists/', include('wishlists.urls')),
 ]
