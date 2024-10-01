@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&-8n9cjhbljmf$y(ud4+lu&%k#c%d&=34p&*m7#t(cekvnp6o#'
 GOOGLE_OAUTH2_CLIENT_ID = 'YOUR_GOOGLE_OAUTH2_CLIENT_ID'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'YOUR_GOOGLE_OAUTH2_CLIENT_SECRET'
-MONGODB_URI = 'OUR_MONGODB_URI'
+MONGODB_URI = os.getenv("mongodb+srv://fcamachosolis:nM0lmPKPPfeCZ4Oc@cluster0.duxte.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -87,12 +87,14 @@ WSGI_APPLICATION = 'TechMartBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+import mongoengine
+mongoengine.connect("TechMart", host=MONGODB_URI)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
