@@ -1,11 +1,14 @@
-from django.db import models
+from mongoengine import Document, StringField, IntField, FloatField, ListField
 
-class TechItem(models.Model):
-    _id = models.CharField(max_length=10, primary_key=True)
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
-    category = models.CharField(max_length=100)
+# Create your models here.
+class Itemss(Document):
+    ID = IntField()
+    name = StringField()
+    price = DecimalField(precision=2)
+    description = StringField()
+    category = StringField()
+    
 
-    def __str__(self):
-        return self.name
+    meta = {
+        'collection': 'Items'
+    }
