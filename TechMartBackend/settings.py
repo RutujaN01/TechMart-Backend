@@ -87,8 +87,11 @@ WSGI_APPLICATION = 'TechMartBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Set up the MongoDB connection
 import mongoengine
 mongoengine.connect("TechMart", host=MONGODB_URI)
+
+# Since mongoengine doesn't use the Django ORM, we don't need to configure the DATABASES setting
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
