@@ -8,7 +8,7 @@ class User(Document):
     username = StringField(required=True, unique=True, max_length=50)
     email = EmailField(required=True, unique=True)
     password = StringField(max_length=100)
-    roles = ListField(StringField())
+    roles = ListField(StringField(), default=["user"], choices=["user", "admin"])
 
     def save(self, *args, **kwargs):
         if self.password:
