@@ -4,7 +4,6 @@ from mongoengine import Document, StringField, IntField, FloatField, ListField
 class Itemss(Document):
     ID = IntField()
     name = StringField()
-    price = DecimalField(precision=2)
     description = StringField()
     category = StringField()
     
