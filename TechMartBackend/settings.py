@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&-8n9cjhbljmf$y(ud4+lu&%k#c%d&=34p&*m7#t(cekvnp6o#'
 GOOGLE_OAUTH2_CLIENT_ID = 'YOUR_GOOGLE_OAUTH2_CLIENT_ID'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'YOUR_GOOGLE_OAUTH2_CLIENT_SECRET'
-MONGODB_URI = os.getenv("MONGO_HOST")
+MONGODB_URI = os.getenv("MONGO_HOST", "mongodb://localhost:27017/TechMart")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,12 +88,22 @@ WSGI_APPLICATION = 'TechMartBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Set up the MongoDB connection
 import mongoengine
 mongoengine.connect("TechMart", host=MONGODB_URI)
+
+# Since mongoengine doesn't use the Django ORM, we don't need to configure the DATABASES setting
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.dummy'
 #     }
 # }
 
