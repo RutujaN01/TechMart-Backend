@@ -1,35 +1,14 @@
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 from mongoengine.errors import NotUniqueError
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from decorators import admin_route
-from .models import User
+from .models import User, Token
 from .serializers import UserSerializer
 
-
-# Create your views here.
-@api_view(['GET'])
-@admin_route
-def test(request):
-    # Create a test user
-    test_user = User(username="John", email="test@gmail.com", password="test")
-    try:
-        test_user.save()
-    except NotUniqueError:
-        return Response({"error": "User already exists"}, status=400)
-
-    # Find the test user with a query
-    test_user = User.objects().get(id=test_user.id)
-    # Serialize and return the test user
-    return_user_data = UserSerializer(test_user).data
-
-    # Clean up
-    test_user.delete()
-
-    return Response({"data": return_user_data})
 
 # Establish that the view takes a POST request
 @api_view(['POST'])
@@ -67,6 +46,9 @@ def login(request):
 
     # If the user exists and the password is correct, create a refresh token
     refresh = RefreshToken.for_user(user)
+
+    # Store the refresh token in the database
+    Token(username=user.username, token=str(refresh)).save()
 
     # Exclude the password hash
     user_data = UserSerializer(user).data

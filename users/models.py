@@ -1,6 +1,7 @@
-from mongoengine import Document, StringField, ListField
+from mongoengine import Document, StringField, ListField, ReferenceField
 from mongoengine.fields import EmailField
 from django.contrib.auth.hashers import make_password
+
 
 # Create your models here.
 class User(Document):
@@ -28,3 +29,12 @@ class User(Document):
     @property
     def is_authenticated(self):
         return self.authenticated
+
+
+class Token(Document):
+    username = StringField(unique=True, required=True)
+    token = StringField(required=True)
+
+    meta = {
+        'collection': 'tokens'
+    }
