@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField, FloatField, ListField
+from mongoengine import Document, StringField, ListField
 from mongoengine.fields import EmailField
 from django.contrib.auth.hashers import make_password
 
@@ -8,7 +8,9 @@ class User(Document):
     username = StringField(required=True, unique=True, max_length=50)
     email = EmailField(required=True, unique=True)
     password = StringField(max_length=100)
-    roles = ListField(StringField(), default=["user"], choices=["user", "admin"])
+    roles = ListField(StringField(), default=["user"])
+    # Exclude this next field from the database
+    authenticated = False
 
     def save(self, *args, **kwargs):
         if self.password:
