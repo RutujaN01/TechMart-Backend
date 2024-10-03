@@ -20,3 +20,11 @@ class User(Document):
     meta = {
         'collection': 'users'
     }
+
+    @property
+    def is_staff(self):
+        return 'admin' in self.roles
+
+    @property
+    def is_authenticated(self):
+        return self.authenticated
