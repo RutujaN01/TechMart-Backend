@@ -44,11 +44,18 @@ def login(request):
     if user is None or not check_password(login_data["password"], user.password):
         return Response({"error": "Invalid credentials"}, status=401)
 
+    # If there is already a token for the user, delete it
+    token = Token.objects(user=user).first()
+    if token:
+        token.delete()
+
     # If the user exists and the password is correct, create a refresh token
     refresh = RefreshToken.for_user(user)
+    access_token = str(refresh.access_token)
 
     # Store the refresh token in the database
-    Token(username=user.username, token=str(refresh)).save()
+    # Store the "token" field as the access token
+    Token(user=user, token=access_token).save()
 
     # Exclude the password hash
     user_data = UserSerializer(user).data
@@ -57,7 +64,7 @@ def login(request):
     # Return the refresh token, access token, and user data
     return Response({
         "refresh": str(refresh),
-        "access": str(refresh.access_token),
+        "access": access_token,
         "user": user_data
     })
 
@@ -65,12 +72,6 @@ def login(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
-    # Extract the refresh token from the request
-    refresh_token = request.data.get("refresh")
-
-    if not refresh_token:
-        return Response({"error": "Refresh token not provided"}, status=400)
-
     # Find the user with the provided username
     username = request.user.username
     user = User.objects(username=username).first()
@@ -80,7 +81,7 @@ def logout(request):
         return Response({"error": "User not found"}, status=404)
 
     # Remove the token from the database
-    token = Token.objects(username=user['username']).first()
+    token = Token.objects(user=user).first()
     if token:
         token.delete()
         return Response({"message": "Logout successful"})
