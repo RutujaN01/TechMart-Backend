@@ -61,3 +61,27 @@ def login(request):
         "user": user_data
     })
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request, username):
+    # Extract the refresh token from the request
+    refresh_token = request.data.get("refresh")
+
+    if not refresh_token:
+        return Response({"error": "Refresh token not provided"}, status=400)
+
+    # Find the user with the provided username
+    user = User.objects(username=username).first()
+
+    # Check if the user exists
+    if user is None:
+        return Response({"error": "User not found"}, status=404)
+
+    # Remove the token from the database
+    token = Token.objects(username=user['username']).first()
+    if token:
+        token.delete()
+        return Response({"message": "Logout successful"})
+    else:
+        return Response({"error": "Token not found"}, status=404)
