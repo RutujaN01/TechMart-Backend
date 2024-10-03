@@ -104,20 +104,15 @@ def delete_user(request):
         return Response({"error": "Cannot delete an admin"}, status=403)
 
     # Check if the user is trying to delete themselves
-    if user.username != request.user.username:
+    if user.username != request.user.username and 'admin' not in request.user.roles:
         return Response({"error": "Cannot delete another user"}, status=403)
 
-    # Check if the password is correct
-    if not check_password(user_data["password"], user.password):
+    # Check if the password is correct if the user is not an admin
+    if 'admin' not in request.user.roles and not check_password(user_data["password"], user.password):
         return Response({"error": "Invalid password"}, status=401)
 
     # Delete the user
     user.delete()
-
-    # Delete the refresh token
-    token = Token.objects(username=user.username).first()
-    if token:
-        token.delete()
 
     return Response({"message": "User deleted"})
 
