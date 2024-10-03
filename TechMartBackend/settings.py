@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_mongoengine',
     'users.apps.UsersConfig',
     'items.apps.ItemsConfig',
     'wishlists.apps.WishlistsConfig',
@@ -59,6 +61,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware'
+]
+
+# Custom backend setup for MongoDB
+AUTHENTICATION_BACKENDS = [
+    'users.authentication.JWTAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
