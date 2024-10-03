@@ -11,6 +11,26 @@ from .serializers import UserSerializer
 
 
 # Create your views here.
+@api_view(['GET'])
+@admin_route
+def test(request):
+    # Create a test user
+    test_user = User(username="John", email="test@gmail.com", password="test")
+    try:
+        test_user.save()
+    except NotUniqueError:
+        return Response({"error": "User already exists"}, status=400)
+
+    # Find the test user with a query
+    test_user = User.objects().get(id=test_user.id)
+    # Serialize and return the test user
+    return_user_data = UserSerializer(test_user).data
+
+    # Clean up
+    test_user.delete()
+
+    return Response({"data": return_user_data})
+
 # Establish that the view takes a POST request
 @api_view(['POST'])
 def create_user(request):
@@ -32,4 +52,30 @@ def create_user(request):
     user_data = UserSerializer(user).data
     return Response({"data": user_data})
 
+
+@api_view(['POST'])
+def login(request):
+    # Extract the login data from the request
+    login_data = request.data
+
+    # Find the user with the provided username
+    user = User.objects(username=login_data["username"]).first()
+
+    # Check if the user exists and the password is correct
+    if user is None or not check_password(login_data["password"], user.password):
+        return Response({"error": "Invalid credentials"}, status=401)
+
+    # If the user exists and the password is correct, create a refresh token
+    refresh = RefreshToken.for_user(user)
+
+    # Exclude the password hash
+    user_data = UserSerializer(user).data
+    user_data.pop("password")
+
+    # Return the refresh token, access token, and user data
+    return Response({
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
+        "user": user_data
+    })
 
