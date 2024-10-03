@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from decorators import admin_route
 from .models import User, Token
 from .serializers import UserSerializer
 
@@ -119,3 +118,13 @@ def delete_user(request):
         token.delete()
 
     return Response({"message": "User deleted"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_current_user(request):
+    user = request.user
+    user_data = UserSerializer(user).data
+    # Exclude the password hash
+    user_data.pop("password")
+    return Response({"data": user_data})
