@@ -64,7 +64,7 @@ def login(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def logout(request, username):
+def logout(request):
     # Extract the refresh token from the request
     refresh_token = request.data.get("refresh")
 
@@ -72,6 +72,7 @@ def logout(request, username):
         return Response({"error": "Refresh token not provided"}, status=400)
 
     # Find the user with the provided username
+    username = request.user.username
     user = User.objects(username=username).first()
 
     # Check if the user exists
@@ -85,3 +86,36 @@ def logout(request, username):
         return Response({"message": "Logout successful"})
     else:
         return Response({"error": "Token not found"}, status=404)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_user(request):
+    # Body will contain the username and password of the user to be deleted and the refresh token
+    user_data = request.data
+    user = User.objects(username=user_data["username"]).first()
+
+    if not user:
+        return Response({"error": "User not found"}, status=404)
+
+    # Check if the user is an admin
+    if 'admin' in user.roles:
+        return Response({"error": "Cannot delete an admin"}, status=403)
+
+    # Check if the user is trying to delete themselves
+    if user.username != request.user.username:
+        return Response({"error": "Cannot delete another user"}, status=403)
+
+    # Check if the password is correct
+    if not check_password(user_data["password"], user.password):
+        return Response({"error": "Invalid password"}, status=401)
+
+    # Delete the user
+    user.delete()
+
+    # Delete the refresh token
+    token = Token.objects(username=user.username).first()
+    if token:
+        token.delete()
+
+    return Response({"message": "User deleted"})
