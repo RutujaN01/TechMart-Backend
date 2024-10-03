@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from decorators import admin_route
 from .models import User, Token
 from .serializers import UserSerializer
 
@@ -128,3 +129,10 @@ def get_current_user(request):
     # Exclude the password hash
     user_data.pop("password")
     return Response({"data": user_data})
+
+@api_view(['GET'])
+@admin_route
+def get_users(request):
+    users = User.objects()
+    users_data = UserSerializer(users, many=True).data
+    return Response({"data": users_data})
