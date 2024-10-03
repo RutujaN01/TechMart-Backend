@@ -38,7 +38,7 @@ class ItemModelTest(TestCase):
         found_item = Items.objects.get(id=item.id)
 
         self.assertEqual(found_item.name, 'galaxyPhone')
-        self.assertEqual(found_item.price, 999.99)
+        self.assertEqual(found_item.price, '999.99')
         self.assertEqual(found_item.description, 'Opposite of Apple phone')
         self.assertEqual(found_item.category, 'Samsung')
 
@@ -58,7 +58,7 @@ class ItemModelTest(TestCase):
     def test_retrieve_item(self):
         item = Items.objects.get(id=self.item_id)
         self.assertEqual(item.name, 'testitem')
-        self.assertEqual(item.price, 9.99)
+        self.assertEqual(item.price, '9.99')
         self.assertEqual(item.description, 'This is test for very important testing that is required')
         self.assertEqual(item.category, 'testcategory')
 

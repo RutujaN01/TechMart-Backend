@@ -7,7 +7,10 @@ class Items(Document):
     description = StringField(max_length=300)
     category = StringField(max_length=20)
     
+    def save(self, *args, **kwargs):
+        super(Items, self).save(*args, **kwargs)
 
+        
     meta = {
         'collection': 'items'
     }
