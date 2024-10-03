@@ -1,13 +1,16 @@
-from mongoengine import Document, StringField, IntField, FloatField, ListField
+from mongoengine import Document, StringField, IntField, FloatField, ListField, DecimalField
 
 # Create your models here.
-class Itemss(Document):
-    ID = IntField()
-    name = StringField()
-    description = StringField()
-    category = StringField()
+class Items(Document):
+    name = StringField(required = True, max_length = 50)
+    price = DecimalField(required = True, decimal_places=2, min_value = 0)
+    description = StringField(max_length=300)
+    category = StringField(max_length=20)
     
+    def save(self, *args, **kwargs):
+        super(Items, self).save(*args, **kwargs)
 
+        
     meta = {
-        'collection': 'Items'
+        'collection': 'items'
     }
