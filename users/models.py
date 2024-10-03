@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, ReferenceField
+from mongoengine import Document, StringField, ListField, ReferenceField, CASCADE
 from mongoengine.fields import EmailField
 from django.contrib.auth.hashers import make_password
 
@@ -32,9 +32,10 @@ class User(Document):
 
 
 class Token(Document):
-    username = StringField(unique=True, required=True)
+    user = ReferenceField(User, required=True, unique=True, reverse_delete_rule=CASCADE)
     token = StringField(required=True)
 
     meta = {
         'collection': 'tokens'
     }
+
