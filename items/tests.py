@@ -1,7 +1,7 @@
 from bson import ObjectId
 from django.test import TestCase
 
-
+from decimal import Decimal
 from items.models import Items
 
 
@@ -28,7 +28,7 @@ class ItemModelTest(TestCase):
             Items.objects.get(name='galaxyPhone').delete()
         item = Items(
             id=ObjectId(),
-            # name='newitem',galaxyPhone
+            name='galaxyPhone',
             price=999.99,
             description='Opposite of Apple phone',
             category='Samsung'
@@ -38,7 +38,7 @@ class ItemModelTest(TestCase):
         found_item = Items.objects.get(id=item.id)
 
         self.assertEqual(found_item.name, 'galaxyPhone')
-        self.assertEqual(found_item.price, '999.99')
+        self.assertEqual(found_item.price, Decimal('999.99'))
         self.assertEqual(found_item.description, 'Opposite of Apple phone')
         self.assertEqual(found_item.category, 'Samsung')
 
@@ -58,7 +58,7 @@ class ItemModelTest(TestCase):
     def test_retrieve_item(self):
         item = Items.objects.get(id=self.item_id)
         self.assertEqual(item.name, 'testitem')
-        self.assertEqual(item.price, '9.99')
+        self.assertEqual(item.price,  Decimal('9.99'))
         self.assertEqual(item.description, 'This is test for very important testing that is required')
         self.assertEqual(item.category, 'testcategory')
 
@@ -74,7 +74,7 @@ class ItemModelTest(TestCase):
         item.price = 14.99
         item.save()
         updated_item = Items.objects.get(id=self.item_id)
-        self.assertEqual(updated_item.price, 14.99)
+        self.assertEqual(updated_item.price,  Decimal('14.99'))
 
     def test_delete_item(self):
         item = Items.objects.get(id=self.item_id)
