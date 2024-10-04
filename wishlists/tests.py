@@ -22,6 +22,8 @@ class WishlistModelTest(TestCase):
             email='testuser@example.com',
             roles=['user']
         )
+        self.user.save()
+
         self.item1 = Items.objects.create(
             id=ObjectId(),
             name='testitem1',
@@ -29,6 +31,8 @@ class WishlistModelTest(TestCase):
             description='Item 1',
             category='testcategory'
         )
+        self.item1.save()
+
         self.item2 = Items.objects.create(
             id=ObjectId(),
             name='testitem2',
@@ -36,7 +40,8 @@ class WishlistModelTest(TestCase):
             description='Item 2',
             category='testcategory'
         )
-
+        self.item2.save()
+        
         if Wishlists.objects.filter(name = 'Holloween').count() > 0:
             Wishlists.objects.get(name = 'Holloween').delete()
         self.wishlist_id = ObjectId()
