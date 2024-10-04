@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_mongoengine',
     'users.apps.UsersConfig',
     'items.apps.ItemsConfig',
     'wishlists.apps.WishlistsConfig',
@@ -61,6 +63,29 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware'
 ]
 
+# Setup for persistent login with JWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'users.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'CHECK_REVOKE_TOKEN': True,
+}
+
+# Custom backend setup for MongoDB
+AUTHENTICATION_BACKENDS = [
+    'users.authentication.JWTAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# CORS settings
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'TechMartBackend.urls'

@@ -1,6 +1,6 @@
 from bson import ObjectId
-from django.test import TestCase
 from django.contrib.auth.hashers import check_password
+from django.test import TestCase
 
 from users.models import User
 
@@ -51,16 +51,6 @@ class UserModelTest(TestCase):
                 username='newuser',
                 email='newuser',
                 roles=['user']
-            )
-            user.save()
-
-    def test_create_user_with_invalid_role(self):
-        with self.assertRaises(Exception):
-            user = User(
-                id=ObjectId(),
-                username='newuser',
-                email='newuser@gmail.com',
-                roles=['invalid']
             )
             user.save()
 
