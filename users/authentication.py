@@ -18,8 +18,7 @@ class JWTAuthentication(BaseAuthentication):
             user = User.objects.get(id=ObjectId(user_id))
 
             token_from_db = Token.objects.get(user=user)
-            print(f"Token from db: {token_from_db.token}")
-            print(f"Token from re: {token.split(' ')[1]}")
+
             # The token passed in will be "Bearer <token>" where token is the access token
             if token_from_db.token != token.split(' ')[1]:
                 raise AuthenticationFailed('Invalid token')
