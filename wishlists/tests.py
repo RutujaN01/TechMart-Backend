@@ -13,13 +13,13 @@ from wishlists.models import Wishlists
 
 class WishlistModelTest(TestCase):
     def setUp(self):
-        if User.objects.filter(username='testuser1').count() > 0:
-            User.objects.get(username='testuser1').delete()
+        if User.objects.filter(username='testuser11').count() > 0:
+            User.objects.get(username='testuser11').delete()
         self.user = User.objects.create(
             google_id='test_google_id',
-            username='testuser1',
+            username='testuser11',
             password='ToughPassword123!@#',
-            email='testuser@example.com',
+            email='testuserr@example.com',
             roles=['user']
         )
         self.user.save()
@@ -41,7 +41,7 @@ class WishlistModelTest(TestCase):
             category='testcategory'
         )
         self.item2.save()
-        
+
         if Wishlists.objects.filter(name = 'Holloween').count() > 0:
             Wishlists.objects.get(name = 'Holloween').delete()
         self.wishlist_id = ObjectId()
