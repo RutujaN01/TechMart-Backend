@@ -44,10 +44,8 @@ class WishlistModelTest(TestCase):
             id = self.wishlist_id,
             name = 'Holloween',
             userID = self.user,
+            item_ids=[self.item1, self.item2]
         )
-
-        self.wishlist.item_ids.append(self.item1)
-        self.wishlist.item_ids.append(self.item2)#should work hopefully 
         self.wishlist.save()
 
     
