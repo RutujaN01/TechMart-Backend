@@ -9,6 +9,6 @@ docker build -t <image-name> .
 Note that the image name can be anything you want to name the image. For example, `docker build -t my-image .`
 4. Run the following command to run the docker image
 ```bash
-docker run -p -it 8081:8080 <image-name>
+docker run -p 8081:8080 -it <image-name>
 ```
-5. Open your browser and navigate to `http://localhost:8081` to view the application
+5. Open your browser and navigate to `http://localhost:8081` to view the application.
