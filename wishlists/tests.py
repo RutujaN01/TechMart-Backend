@@ -55,7 +55,7 @@ class WishlistModelTest(TestCase):
         self.item2.delete()
         self.user.delete()
 
-
+# https://docs.mongoengine.org/guide/querying.html 2.5.10. Atomic updates¶
     def test_add_items_to_wishlist(self):
         new_item = Items.objects.create(
             id=ObjectId(),
@@ -64,10 +64,11 @@ class WishlistModelTest(TestCase):
             description='Item 3',
             category='testcategory'
         )
-        self.wishlist.item_ids.append(new_item)
+        self.wishlist.update_one(push__item_ids=new_item)
         self.wishlist.save()
 
-        self.assertIn(new_item, self.wishlist.item_ids)
+        updated_wishlist = Wishlists.objects.get(id=self.wishlist.id)
+        self.assertIn(new_item.id, updated_wishlist.item_ids)
 
         new_item.delete()
     
