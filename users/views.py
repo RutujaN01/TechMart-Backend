@@ -126,9 +126,21 @@ def get_current_user(request):
     user_data.pop("password")
     return Response({"data": user_data})
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @admin_route
 def get_users(request):
+    # Handle the PUT request
+    if request.method == 'PUT':
+
+        # Admin will send in a list of users to add
+        users = request.data["users"]
+        for user in users:
+            print(dict(user))
+            user = User(**user)
+            user.save()
+        return Response({"message": "Users added"})
+
+    # Handle the GET request
     users = User.objects()
     users_data = UserSerializer(users, many=True).data
     return Response({"data": users_data})
