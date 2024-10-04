@@ -46,8 +46,8 @@ class WishlistModelTest(TestCase):
             userID = self.user,
         )
 
-        self.wishlist.items.append(self.item1)
-        self.wishlist.items.append(self.item2)#should work hopefully 
+        self.wishlist.item_ids.append(self.item1)
+        self.wishlist.item_ids.append(self.item2)#should work hopefully 
         self.wishlist.save()
 
     
@@ -66,30 +66,30 @@ class WishlistModelTest(TestCase):
             description='Item 3',
             category='testcategory'
         )
-        self.wishlist.items.append(new_item)
+        self.wishlist.item_ids.append(new_item)
         self.wishlist.save()
 
-        self.assertIn(new_item, self.wishlist.items)
+        self.assertIn(new_item, self.wishlist.item_ids)
 
         new_item.delete()
     
 
 
     def test_remove_items_from_wishlist(self):
-        self.wishlist.items.remove(self.item1)
+        self.wishlist.item_ids.remove(self.item1)
         self.wishlist.save()
-        self.assertNotIn(self.item1, self.wishlist.items)
+        self.assertNotIn(self.item1, self.wishlist.item_ids)
 
     def test_retrieve_wishlist_items(self):
-        wishlist_items = self.wishlist.items
+        wishlist_items = self.wishlist.item_ids
         self.assertEqual(len(wishlist_items), 2)#this makes sure that the 2 items in there
         self.assertIn(self.item1, wishlist_items)
         self.assertIn(self.item2, wishlist_items)
 
     def test_clear_wishlist(self):
-        self.wishlist.items = []
+        self.wishlist.item_ids = []
         self.wishlist.save()
-        wishlist_items = self.wishlist.items
+        wishlist_items = self.wishlist.item_ids
         self.assertEqual(len(wishlist_items), 0)
 
 
