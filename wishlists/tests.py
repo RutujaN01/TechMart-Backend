@@ -11,7 +11,7 @@ from wishlists.models import Wishlists
 # https://docs.mongoengine.org/guide/querying.html Object
 
 
-class WhishlistModelTest(TestCase):
+class WishlistModelTest(TestCase):
     def setUp(self):
         if User.objects.filter(username='testuser1').count() > 0:
             User.objects.get(username='testuser1').delete()
@@ -37,10 +37,10 @@ class WhishlistModelTest(TestCase):
             category='testcategory'
         )
 
-        if Whishlist.objects.filter(name = 'Holloween').count() > 0:
-            Whishlist.objects.get(name = 'Holloween').delete()
+        if Wishlist.objects.filter(name = 'Holloween').count() > 0:
+            Wishlist.objects.get(name = 'Holloween').delete()
         self.wishlist_id = ObjectId()
-        self.wishlist = Whishlist(
+        self.wishlist = Wishlist(
             id = self.wishlist_id,
             name = 'Holloween',
             userID = self.user,
