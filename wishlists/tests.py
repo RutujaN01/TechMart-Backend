@@ -1,3 +1,105 @@
+from bson import ObjectId
 from django.test import TestCase
 
-# Create your tests here.
+from decimal import Decimal
+
+from items.models import Items
+from users.models import User
+from wishlists.models import Wishlists
+
+# make test make user delete user keep item but dont keep the whishlist with the user ID
+
+# https://docs.mongoengine.org/guide/querying.html Object
+
+
+class WhishlistModelTest(TestCase):
+    def setUp(self):
+        if User.objects.filter(username='testuser1').count() > 0:
+            User.objects.get(username='testuser1').delete()
+        self.user = User.objects.create(
+            google_id='test_google_id',
+            username='testuser1',
+            password='ToughPassword123!@#',
+            email='testuser@example.com',
+            roles=['user']
+        )
+        self.item1 = Items.objects.create(
+            id=ObjectId(),
+            name='testitem1',
+            price= 19.99,
+            description='Item 1',
+            category='testcategory'
+        )
+        self.item2 = Items.objects.create(
+            id=ObjectId(),
+            name='testitem2',
+            price= 49.99,
+            description='Item 2',
+            category='testcategory'
+        )
+
+        if Whishlist.objects.filter(name = 'Holloween').count() > 0:
+            Whishlist.objects.get(name = 'Holloween').delete()
+        self.wishlist_id = ObjectId()
+        self.wishlist = Whishlist(
+            id = self.wishlist_id,
+            name = 'Holloween',
+            userID = user,
+        )
+
+        self.wishlist.items.append(self.item1)
+        self.wishlist.items.append(self.item2)#should work hopefully 
+        self.wishlist.save()
+
+    
+    def tearDown(self):
+        self.wishlist.delete()
+        self.item1.delete()
+        self.item2.delete()
+        self.user.delete()
+
+
+    def test_add_items_to_wishlist(self):
+        new_item = Items.objects.create(
+            id=ObjectId(),
+            name='testitem3',
+            price=119.99,
+            description='Item 3',
+            category='testcategory'
+        )
+        self.wishlist.items.append(new_item)
+        self.wishlist.save()
+
+        self.assertIn(new_item, self.wishlist.items)
+
+        new_item.delete()
+    
+
+
+    def test_remove_items_from_wishlist(self):
+        self.wishlist.items.remove(self.item1)
+        self.wishlist.save()
+        self.assertNotIn(self.item1, self.wishlist.items)
+
+    def test_retrieve_wishlist_items(self):
+        wishlist_items = self.wishlist.items
+        self.assertEqual(len(wishlist_items), 2)#this makes sure that the 2 items in there
+        self.assertIn(self.item1, wishlist_items)
+        self.assertIn(self.item2, wishlist_items)
+
+    def test_clear_wishlist(self):
+        self.wishlist.items = []
+        self.wishlist.save()
+        wishlist_items = self.wishlist.items
+        self.assertEqual(len(wishlist_items), 0)
+
+
+
+
+    def test_delete_wishlist(self):
+        self.wishlist.delete()
+        with self.assertRaises(Wishlist.DoesNotExist):
+            Wishlist.objects.get(user=self.user)
+
+
+
