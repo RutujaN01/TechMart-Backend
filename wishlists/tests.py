@@ -7,7 +7,6 @@ from items.models import Items
 from users.models import User
 from wishlists.models import Wishlists
 
-# make test make user delete user keep item but dont keep the whishlist with the user ID
 
 # https://docs.mongoengine.org/guide/querying.html Object
 
@@ -44,7 +43,7 @@ class WhishlistModelTest(TestCase):
         self.wishlist = Whishlist(
             id = self.wishlist_id,
             name = 'Holloween',
-            userID = user,
+            userID = self.user,
         )
 
         self.wishlist.items.append(self.item1)
@@ -102,4 +101,15 @@ class WhishlistModelTest(TestCase):
             Wishlist.objects.get(user=self.user)
 
 
+    def test_delete_user_with_wishlist(self):
 
+        self.assertIsNotNone(User.objects.get(id=self.user.id))
+        self.assertIsNotNone(Wishlist.objects.get(user=self.user))
+
+        self.user.delete()
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get(id=self.user.id)
+
+        with self.assertRaises(Wishlist.DoesNotExist):
+            Wishlist.objects.get(user=self.user)
+# Self Note:make test create a user delete the user but delete  whishlist with the user ID
