@@ -76,6 +76,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'CHECK_REVOKE_TOKEN': True,
 }
 
 # Custom backend setup for MongoDB
@@ -83,8 +84,6 @@ AUTHENTICATION_BACKENDS = [
     'users.authentication.JWTAuthentication',
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-
 
 # CORS settings
 CORS_ORIGIN_ALLOW_ALL = True
