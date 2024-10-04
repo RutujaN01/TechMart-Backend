@@ -37,10 +37,10 @@ class WishlistModelTest(TestCase):
             category='testcategory'
         )
 
-        if Wishlist.objects.filter(name = 'Holloween').count() > 0:
-            Wishlist.objects.get(name = 'Holloween').delete()
+        if Wishlists.objects.filter(name = 'Holloween').count() > 0:
+            Wishlists.objects.get(name = 'Holloween').delete()
         self.wishlist_id = ObjectId()
-        self.wishlist = Wishlist(
+        self.wishlist = Wishlists(
             id = self.wishlist_id,
             name = 'Holloween',
             userID = self.user,
@@ -97,19 +97,19 @@ class WishlistModelTest(TestCase):
 
     def test_delete_wishlist(self):
         self.wishlist.delete()
-        with self.assertRaises(Wishlist.DoesNotExist):
-            Wishlist.objects.get(user=self.user)
+        with self.assertRaises(Wishlists.DoesNotExist):
+            Wishlists.objects.get(user=self.user)
 
 
     def test_delete_user_with_wishlist(self):
 
         self.assertIsNotNone(User.objects.get(id=self.user.id))
-        self.assertIsNotNone(Wishlist.objects.get(user=self.user))
+        self.assertIsNotNone(Wishlists.objects.get(user=self.user))
 
         self.user.delete()
         with self.assertRaises(User.DoesNotExist):
             User.objects.get(id=self.user.id)
 
-        with self.assertRaises(Wishlist.DoesNotExist):
-            Wishlist.objects.get(user=self.user)
+        with self.assertRaises(Wishlists.DoesNotExist):
+            Wishlists.objects.get(user=self.user)
 # Self Note:make test create a user delete the user but delete  whishlist with the user ID
