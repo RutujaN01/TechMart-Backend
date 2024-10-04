@@ -126,6 +126,7 @@ def get_current_user(request):
     user_data.pop("password")
     return Response({"data": user_data})
 
+
 @api_view(['GET', 'PUT'])
 @admin_route
 def get_users(request):

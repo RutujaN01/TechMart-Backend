@@ -1,9 +1,11 @@
-from rest_framework.authentication import BaseAuthentication
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.exceptions import AuthenticationFailed
-from mongoengine.errors import DoesNotExist
-from users.models import User, Token
 from bson import ObjectId
+from mongoengine.errors import DoesNotExist
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import AccessToken
+
+from users.models import User, Token
+
 
 class JWTAuthentication(BaseAuthentication):
     def authenticate(self, request):

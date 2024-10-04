@@ -1,6 +1,6 @@
 from bson import ObjectId
-from django.test import TestCase
 from django.contrib.auth.hashers import check_password
+from django.test import TestCase
 
 from users.models import User
 
