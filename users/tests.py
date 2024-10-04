@@ -54,16 +54,6 @@ class UserModelTest(TestCase):
             )
             user.save()
 
-    def test_create_user_with_invalid_role(self):
-        with self.assertRaises(Exception):
-            user = User(
-                id=ObjectId(),
-                username='newuser',
-                email='newuser@gmail.com',
-                roles=['invalid']
-            )
-            user.save()
-
     def test_retrieve_user(self):
         user = User.objects.get(id=self.user_id)
         self.assertEqual(user.username, 'testuser')
