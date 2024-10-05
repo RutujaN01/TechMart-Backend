@@ -15,7 +15,7 @@ class WishlistModelTest(TestCase):
     def setUp(self):
         if User.objects.filter(username='testuser11').count() > 0:
             User.objects.get(username='testuser11').delete()
-        self.user = User.objects.create(
+        self.user = User.(
             google_id='test_google_id',
             username='testuser11',
             password='ToughPassword123!@#',
@@ -24,7 +24,9 @@ class WishlistModelTest(TestCase):
         )
         self.user.save()
 
-        self.item1 = Items.objects.create(
+        if Items.objects.filter(name='testitem1').count() > 0:
+        Items.objects.get(name='testitem1').delete()
+        self.item1 = Items(
             id=ObjectId(),
             name='testitem1',
             price= 19.99,
@@ -33,7 +35,10 @@ class WishlistModelTest(TestCase):
         )
         self.item1.save()
 
-        self.item2 = Items.objects.create(
+
+        if Items.objects.filter(name='testitem2').count() > 0:
+        Items.objects.get(name='testitem2').delete()
+        self.item2 = Items(
             id=ObjectId(),
             name='testitem2',
             price= 49.99,
@@ -62,7 +67,9 @@ class WishlistModelTest(TestCase):
 
 # https://docs.mongoengine.org/guide/querying.html 2.5.10. Atomic updates¶
     def test_add_items_to_wishlist(self):
-        new_item = Items.objects.create(
+        if Items.objects.filter(name='testitem3').count() > 0:
+        Items.objects.get(name='testitem3').delete()
+        new_item = Items(
             id=ObjectId(),
             name='testitem3',
             price=119.99,
@@ -117,3 +124,6 @@ class WishlistModelTest(TestCase):
         with self.assertRaises(Wishlists.DoesNotExist):
             Wishlists.objects.get(user=self.user)
 # Self Note:make test create a user delete the user but delete  whishlist with the user ID
+
+
+
