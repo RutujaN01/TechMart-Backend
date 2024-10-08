@@ -7,8 +7,8 @@ from items.models import Items
 # Create your models here.
 class Wishlists(Document):
     name = StringField(required = True, unique = True, max_length = 30)
-    userID = ReferenceField(User,reverse_delete_rule= CASCADE)
-    item_ids = ListField(ReferenceField(Items),reverse_delete_rule= CASCADE)
+    user = ReferenceField(User,reverse_delete_rule= CASCADE)
+    items = ListField(ReferenceField(Items, reverse_delete_rule= CASCADE))
     
     def save(self, *args, **kwargs):
         super(Wishlists, self).save(*args, **kwargs)
