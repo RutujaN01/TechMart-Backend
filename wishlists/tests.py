@@ -15,7 +15,7 @@ class WishlistModelTest(TestCase):
     def setUp(self):
         if User.objects.filter(username='testuser11').count() > 0:
             User.objects.get(username='testuser11').delete()
-        self.user = User.(
+        self.user = User(
             google_id='test_google_id',
             username='testuser11',
             password='ToughPassword123!@#',
@@ -25,37 +25,37 @@ class WishlistModelTest(TestCase):
         self.user.save()
 
         if Items.objects.filter(name='testitem1').count() > 0:
-        Items.objects.get(name='testitem1').delete()
-        self.item1 = Items(
-            id=ObjectId(),
-            name='testitem1',
-            price= 19.99,
-            description='Item 1',
-            category='testcategory'
-        )
+            Items.objects.get(name='testitem1').delete()
+            self.item1 = Items(
+                id=ObjectId(),
+                name='testitem1',
+                price= 19.99,
+                description='Item 1',
+                category='testcategory'
+            )
         self.item1.save()
 
 
         if Items.objects.filter(name='testitem2').count() > 0:
-        Items.objects.get(name='testitem2').delete()
-        self.item2 = Items(
-            id=ObjectId(),
-            name='testitem2',
-            price= 49.99,
-            description='Item 2',
-            category='testcategory'
-        )
+            Items.objects.get(name='testitem2').delete()
+            self.item2 = Items(
+                id=ObjectId(),
+                name='testitem2',
+                price= 49.99,
+                description='Item 2',
+                category='testcategory'
+            )
         self.item2.save()
 
         if Wishlists.objects.filter(name = 'Holloween').count() > 0:
             Wishlists.objects.get(name = 'Holloween').delete()
-        self.wishlist_id = ObjectId()
-        self.wishlist = Wishlists(
-            id = self.wishlist_id,
-            name = 'Holloween',
-            userID = self.user,
-            item_ids=[self.item1, self.item2]
-        )
+            self.wishlist_id = ObjectId()
+            self.wishlist = Wishlists(
+                id = self.wishlist_id,
+                name = 'Holloween',
+                userID = self.user,
+                item_ids=[self.item1, self.item2]
+            )
         self.wishlist.save()
 
     
@@ -68,14 +68,14 @@ class WishlistModelTest(TestCase):
 # https://docs.mongoengine.org/guide/querying.html 2.5.10. Atomic updates¶
     def test_add_items_to_wishlist(self):
         if Items.objects.filter(name='testitem3').count() > 0:
-        Items.objects.get(name='testitem3').delete()
-        new_item = Items(
-            id=ObjectId(),
-            name='testitem3',
-            price=119.99,
-            description='Item 3',
-            category='testcategory'
-        )
+            Items.objects.get(name='testitem3').delete()
+            new_item = Items(
+                id=ObjectId(),
+                name='testitem3',
+                price=119.99,
+                description='Item 3',
+                category='testcategory'
+            )
         self.wishlist.update_one(push__item_ids=new_item)
         self.wishlist.save()
 

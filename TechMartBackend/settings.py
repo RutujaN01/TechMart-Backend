@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&-8n9cjhbljmf$y(ud4+lu&%k#c%d&=34p&*m7#t(cekvnp6o#'
 GOOGLE_OAUTH2_CLIENT_ID = 'YOUR_GOOGLE_OAUTH2_CLIENT_ID'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'YOUR_GOOGLE_OAUTH2_CLIENT_SECRET'
-MONGODB_URI = os.getenv("MONGO_HOST", "mongodb://localhost:27017/TechMart")
+MONGODB_URI = os.getenv("MONGO_HOST")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
