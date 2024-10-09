@@ -1,16 +1,14 @@
-from django.contrib.auth.hashers import check_password
 from mongoengine.errors import NotUniqueError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from decorators import admin_route
 from items.models import Items
 from items.serializers import ItemsSerializer
 from users.models import User
 from .models import Wishlists
 from .serializers import WishlistsSerializer
+
 
 @api_view(['GET'])
 def test(request):
@@ -33,6 +31,7 @@ def test(request):
     wishlist_data = WishlistsSerializer(return_wishlist).data
     del wishlist_data["user"]["password"]
     return Response({"data": wishlist_data})
+
 
 # Create your views here.
 @api_view(['POST'])
@@ -75,6 +74,7 @@ def create_wishlist(request):
     wishlist_data = WishlistsSerializer(wishlist).data
     return Response({"data": wishlist_data})
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_items_for_current_user(request):
@@ -88,6 +88,7 @@ def get_all_items_for_current_user(request):
     # Serialize the item data and return it
     items_data = ItemsSerializer(items, many=True).data
     return Response({"data": items_data})
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -204,9 +205,13 @@ def update_wishlist(request):
     wishlist_data = WishlistsSerializer(wishlist).data
     return Response({"data": wishlist_data})
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_wishlist(request, wishlist_id):
+def delete_wishlist(request):
+    # Extract the wishlist ID from the request
+    wishlist_id = request.data["wishlist_id"]
+
     # Find the wishlist by ID
     wishlist = Wishlists.objects(id=wishlist_id).first()
 
