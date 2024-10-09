@@ -10,29 +10,6 @@ from .models import Wishlists
 from .serializers import WishlistsSerializer
 
 
-@api_view(['GET'])
-def test(request):
-    user = User.objects(username="admin").first()
-
-    Items.objects(name=r"item*").delete()
-    items = []
-    for i in range(5):
-        item = Items(name=f"item{i}", price=10.0)
-        items.append(item)
-
-    [item.save() for item in items]
-    Wishlists.objects().delete()
-    wishlist = Wishlists(name="wishlist1", user=user.id, items=items)
-    wishlist.save()
-    print(wishlist.user)
-    print(wishlist.items)
-
-    return_wishlist = Wishlists.objects(name="wishlist1").first()
-    wishlist_data = WishlistsSerializer(return_wishlist).data
-    del wishlist_data["user"]["password"]
-    return Response({"data": wishlist_data})
-
-
 # Create your views here.
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -183,7 +160,6 @@ def update_wishlist(request):
         if user is None:
             return Response({"error": "User does not exist"}, status=404)
         wishlist_data["user"] = user
-
 
     # Validate the items in the wishlist
     if "items" in wishlist_data:
