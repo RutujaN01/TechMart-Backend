@@ -44,18 +44,20 @@ def login(request):
     if user is None or not check_password(login_data["password"], user.password):
         return Response({"error": "Invalid credentials"}, status=401)
 
-    # If there is already a token for the user, delete it
-    token = Token.objects(user=user).first()
-    if token:
-        token.delete()
-
     # If the user exists and the password is correct, create a refresh token
     refresh = RefreshToken.for_user(user)
     access_token = str(refresh.access_token)
 
-    # Store the refresh token in the database
-    # Store the "token" field as the access token
-    Token(user=user, token=access_token).save()
+    # Check if a token already exists for the user
+    token = Token.objects(user=user).first()
+    if token:
+        # Update the existing token
+        token.token = access_token
+        token.save()
+    else:
+        # Create a new token
+        new_token = Token(user=user, token=access_token, username=user.username)
+        new_token.save()
 
     # Exclude the password hash
     user_data = UserSerializer(user).data
