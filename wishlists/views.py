@@ -59,6 +59,20 @@ def create_wishlist(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def get_all_items_for_current_user(request):
+    # Extract all items that are in the current user's wishlists
+    wishlists = Wishlists.objects(user=request.user)
+    items = []
+
+    for wishlist in wishlists:
+        items.extend(wishlist.items)
+
+    # Serialize the item data and return it
+    items_data = ItemsSerializer(items, many=True).data
+    return Response({"data": items_data})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_wishlists_for_current_user(request):
     # Extract all wishlists from the database
     wishlists = Wishlists.objects(user=request.user)
