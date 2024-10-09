@@ -155,8 +155,50 @@ def add_item_to_wishlist(request):
     return Response({"data": wishlist_data})
 
 
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_wishlist(request):
+    # Extract the wishlist data from the request
+    wishlist_id = request.data["wishlist_id"]
+    wishlist_data = request.data
+
+    # Remove it so that Mongoengine doesn't try to update it in the Document
+    wishlist_data.pop("wishlist_id")
+
+    # If wishlist_data has nothing, return an error
+    if not wishlist_data:
+        return Response({"error": "No data provided to update wishlist"}, status=400)
+
+    # Find the wishlist by ID
+    wishlist = Wishlists.objects(id=wishlist_id).first()
+
+    # If the user is not the owner of the wishlist, return an error
+    if wishlist.user != request.user and not request.user.is_staff:
+        return Response({"error": "You do not have permission to update this wishlist"}, status=403)
+
+    # Update the wishlist data user to be the user object
+    if "user" in wishlist_data:
+        user = User.objects(id=wishlist_data["user"]).first()
+        if user is None:
+            return Response({"error": "User does not exist"}, status=404)
+        wishlist_data["user"] = user
+
+
+    # Validate the items in the wishlist
+    if "items" in wishlist_data:
+        items = []
+        for item_id in wishlist_data["items"]:
+            item = Items.objects(id=item_id).first()
+            if item is None:
+                return Response({"error": "Item does not exist"}, status=404)
+            items.append(item)
+        wishlist_data["items"] = items
+
     # Update the wishlist data
     wishlist.update(**wishlist_data)
+
+    # Ensure that changes from the database are reflected in the object
+    wishlist.reload()
 
     # Serialize the wishlist data and return it
     wishlist_data = WishlistsSerializer(wishlist).data
