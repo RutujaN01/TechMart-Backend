@@ -120,7 +120,7 @@ def get_wishlist_by_id(request, wishlist_id):
     return Response({"data": wishlist_data})
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def add_item_to_wishlist(request):
     # Extract the wishlist and item IDs from the request
