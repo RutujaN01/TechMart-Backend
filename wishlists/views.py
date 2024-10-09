@@ -41,7 +41,25 @@ def create_wishlist(request):
     # Extract the wishlist data from the request and create a new wishlist
     wishlist_data = request.data
     wishlist = Wishlists(**wishlist_data)
-    wishlist.user = request.user
+
+    # If the user is an admin, they can create a wishlist for another user
+    if request.user.is_staff:
+        # Handle the case where the admin is creating a wishlist for another user
+        if "user" in wishlist_data and wishlist_data["user"] != str(request.user.id):
+            user = User.objects(id=wishlist_data["user"]).first()
+            if user is None:
+                return Response({"error": "User does not exist"}, status=400)
+            wishlist.user = user
+
+        # Handle the case where the admin is creating a wishlist for themselves
+        else:
+            wishlist.user = request.user
+    # Handle cases where the user is not an admin
+    else:
+        # If the user is not an admin, they can only create a wishlist for themselves
+        if "user" in wishlist_data and wishlist_data["user"] != str(request.user.id):
+            return Response({"error": "You do not have permission to create a wishlist for another user"}, status=403)
+        wishlist.user = request.user
 
     # Save the wishlist to the database
     try:
