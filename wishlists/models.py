@@ -7,7 +7,7 @@ from users.models import User
 from items.models import Items
 # Create your models here.
 class Wishlists(Document):
-    name = StringField(required = True, unique_with='user',  max_length = 30)
+    name = StringField(required = True, unique_with='user',  max_length = 50)
     user = ReferenceField(User, unique_with='name', reverse_delete_rule= CASCADE)
     items = ListField(ReferenceField(Items, reverse_delete_rule= CASCADE))
     isPublic = BooleanField(default = True)
