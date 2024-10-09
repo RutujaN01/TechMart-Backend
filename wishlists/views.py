@@ -120,6 +120,41 @@ def get_wishlist_by_id(request, wishlist_id):
     return Response({"data": wishlist_data})
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def add_item_to_wishlist(request):
+    # Extract the wishlist and item IDs from the request
+    item_id = request.data["item_id"]
+    wishlist_id = request.data["wishlist_id"]
+    # Find the wishlist by ID
+    wishlist = Wishlists.objects(id=wishlist_id).first()
+
+    # If the user is not the owner of the wishlist, return an error
+    if wishlist.user != request.user and not request.user.is_staff:
+        return Response({"error": "You do not have permission to update this wishlist"}, status=403)
+
+    # Find the item by ID
+    item = Items.objects(id=item_id).first()
+
+    # If the item does not exist, return an error
+    if item is None:
+        return Response({"error": "Item does not exist"}, status=404)
+
+    if item in wishlist.items:
+        # Remove the item from the wishlist
+        wishlist.items.remove(item)
+    else:
+        # Add the item to the wishlist
+        wishlist.items.append(item)
+
+    # Save the wishlist
+    wishlist.save()
+
+    # Serialize the wishlist data and return it
+    wishlist_data = WishlistsSerializer(wishlist).data
+    return Response({"data": wishlist_data})
+
+
     # Update the wishlist data
     wishlist.update(**wishlist_data)
 
