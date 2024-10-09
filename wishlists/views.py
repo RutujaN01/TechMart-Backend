@@ -210,6 +210,14 @@ def delete_wishlist(request, wishlist_id):
     # Find the wishlist by ID
     wishlist = Wishlists.objects(id=wishlist_id).first()
 
+    # If the wishlist does not exist, return an error
+    if wishlist is None:
+        return Response({"error": "Wishlist does not exist"}, status=404)
+
+    # If the user is not the owner of the wishlist, return an error
+    if wishlist.user != request.user and not request.user.is_staff:
+        return Response({"error": "You do not have permission to delete this wishlist"}, status=403)
+
     # Delete the wishlist
     wishlist.delete()
 
