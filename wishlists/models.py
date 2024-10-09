@@ -9,7 +9,7 @@ from items.models import Items
 class Wishlists(Document):
     name = StringField(required = True, unique_with='user',  max_length = 50)
     user = ReferenceField(User, unique_with='name', reverse_delete_rule= CASCADE)
-    items = ListField(ReferenceField(Items, reverse_delete_rule= CASCADE))
+    items = ListField(ReferenceField(Items, reverse_delete_rule= CASCADE), default=list)
     isPublic = BooleanField(default = True)
 
     def save(self, *args, **kwargs):
