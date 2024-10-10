@@ -19,3 +19,15 @@ def get_items(request):
     items_data = ItemsSerializer(items, many=True)
     return Response(items_data.data)
 
+
+@api_view(['DELETE'])
+# @permission_classes([IsAuthenticated])
+def delete_item(request):
+    item_data = request.data
+    item = Items.objects(name=item_data["name"]).first()
+    if not item:
+        return Response({"error": "Item not found"}, status=404)
+    
+    item.delete()
+
+    return Response({"message": "Item deleted"})
