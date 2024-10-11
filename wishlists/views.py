@@ -79,19 +79,20 @@ def get_all_wishlists_for_current_user(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_wishlist_by_id(request, wishlist_id):
     # Extract the wishlist from the database
     wishlist = Wishlists.objects(id=wishlist_id).first()
-
+    print(request.user)
     # If the wishlist does not exist, return an error
     if wishlist is None:
         return Response({"error": "Wishlist does not exist"}, status=404)
 
     # If the user is not the owner of the wishlist and the wishlist is not public, return an error
     if not request.user.is_staff:
+        del wishlist.user.password
         if wishlist.user != request.user and not wishlist.isPublic:
             return Response({"error": "You do not have permission to view this wishlist"}, status=403)
+
 
     # Serialize the wishlist data and return it
     wishlist_data = WishlistsSerializer(wishlist).data
