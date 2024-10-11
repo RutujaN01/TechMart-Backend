@@ -32,8 +32,9 @@ class User(Document):
 
 
 class Token(Document):
-    user = ReferenceField(User, required=True, unique=True, reverse_delete_rule=CASCADE)
-    token = StringField(required=True)
+    user = ReferenceField(User, required=True, unique_with='token', reverse_delete_rule=CASCADE)
+    token = StringField(required=True, unique_with='user')
+    username = StringField(required=True, unique=True)
 
     meta = {
         'collection': 'tokens'
