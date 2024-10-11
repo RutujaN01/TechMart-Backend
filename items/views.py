@@ -13,7 +13,6 @@ from .models import Items
 from .serializers import ItemsSerializer
 
 
-# https://docs.mongoengine.org/guide/querying.html  2.5.2.1. String queries
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def get_items(request):
@@ -33,13 +32,11 @@ def getItem(request):
 
 @api_view(['GET'])
 def getItemByName(request):
-    item_name = request.GET.get('name')
-    item = Items.objects(id=item_name).first()
+    item_info = request.data
+    item = Items.objects(name=item_info["name"]).first()
     
     item_data = ItemsSerializer(item)
     return Response(item_data.data)
-
-
 
 # https://docs.mongoengine.org/guide/querying.html
 @api_view(['GET'])
@@ -51,11 +48,7 @@ def getItemsByCat(request):
     
     items_data = ItemsSerializer(items, many = True)
     return Response(items_data.data)
-# https://github.com/MongoEngine/mongoengine/issues/2034 other option is i contains doesnt work
 
-    # items = Items.objects.all()
-    # items_data = ItemsSerializer(items, many=True)
-    # return Response(items_data.data)
 
 
 
@@ -97,17 +90,17 @@ def create_item(request):
 
 
 
-
 @api_view(['PATCH'])
 # @permission_classes([IsAuthenticated])
 def update_item(request):
-    item_id = request.GET.get('id')
-    item = Items.objects(id=item_id).first()
+    # item_id = request.GET.get('id')
+    item_data = request.data
+    item = Items.objects(id=item_data["id"]).first()
 
     if not item:
         return Response({"error": "Item not found"}, status=404)
 
-    item_info = ItemSerializer(item, data=request.data, partial=True)
+    item_info = ItemsSerializer(item, data=request.data, partial=True)
     if item_info.is_valid():
         item_info.save()
         return Response(item_info.data, status=200)
