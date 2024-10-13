@@ -31,7 +31,7 @@ class WishlistModelTest(TestCase):
             name='testitem1',
             price=19.99,
             description='Item 1',
-            category='testcategory'
+            category='testcategory',
             url='myLink.com'
         )
         self.item1.save()
