@@ -21,6 +21,7 @@ from oauth2_provider import urls as oauth2_urls
 from demo import urls as demo_urls
 from users import urls as users_urls
 from items import urls as items_urls
+from wishlists import urls as wishlist_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,5 @@ urlpatterns = [
     path('demo/', include(demo_urls)),
     path('items/', include(items_urls)),
     path('users/', include(users_urls)),
-    # path('wishlists/', include('wishlists.urls')),
+    path('wishlists/', include(wishlist_urls)),
 ]
