@@ -1,4 +1,4 @@
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from mongoengine.errors import NotUniqueError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -147,3 +147,51 @@ def get_users(request):
     users = User.objects()
     users_data = UserSerializer(users, many=True).data
     return Response({"data": users_data})
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user(request):
+    # Extract the user data from the request
+    user_data = request.data
+
+    # Find the user with the provided username
+    user = User.objects(id=user_data["id"]).first()
+
+    # Check if the user exists
+    if user is None:
+        return Response({"error": "User not found"}, status=404)
+
+    # Check if the user is trying to update themselves
+    if user.username != request.user.username and not request.user.is_staff:
+        return Response({"error": "You do not have permission to update that user"}, status=403)
+
+    # For fields that are not provided, keep the existing values
+    user_data = {k: v for k, v in user_data.items() if v is not None and k != "id"}
+
+    if 'password' in user_data:
+        user_data['password'] = make_password(user_data['password'])
+
+    # Only admins can update roles
+    if 'roles' in user_data:
+        if not request.user.is_staff:
+            return Response({"error": "You do not have permission to update roles"}, status=403)
+
+    # Update the user
+    user.update(**user_data)
+    user = User.objects(id=request.data["id"]).first()
+
+    # Delete the token if the username or password was updated
+    if 'username' in user_data:
+        if user_data['username'] != user.username:
+            token = Token.objects(user=user).first()
+            if token:
+                token.delete()
+    if 'password' in user_data:
+        token = Token.objects(user=user).first()
+        if token:
+            token.delete()
+
+    user_data = UserSerializer(user).data
+    user_data.pop("password")
+    return Response({"data": user_data})
