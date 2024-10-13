@@ -16,7 +16,8 @@ class ItemModelTest(TestCase):
             name='testitem',
             price=9.99,
             description='This is test for very important testing that is required',
-            category='testcategory'
+            category='testcategory',
+            url='mytestingsite.com'
         )
         self.item.save()
 
@@ -31,7 +32,8 @@ class ItemModelTest(TestCase):
             name='galaxyPhone',
             price=999.99,
             description='Opposite of Apple phone',
-            category='Samsung'
+            category='Samsung',
+            url='phonesite.com'
         )
         item.save()
 
@@ -51,7 +53,8 @@ class ItemModelTest(TestCase):
                 name='Smart Fridge',
                 price=-100.99, 
                 description='Invalid price item',
-                category='Fridge'
+                category='Fridge',
+                url='fridgesite.com'
             )
             item.save()
 
