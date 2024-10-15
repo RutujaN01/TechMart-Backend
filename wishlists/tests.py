@@ -31,7 +31,8 @@ class WishlistModelTest(TestCase):
             name='testitem1',
             price=19.99,
             description='Item 1',
-            category='testcategory'
+            category='testcategory',
+            url='myLink.com'
         )
         self.item1.save()
 
@@ -42,7 +43,8 @@ class WishlistModelTest(TestCase):
             name='testitem2',
             price=49.99,
             description='Item 2',
-            category='testcategory'
+            category='testcategory',
+            url='otherLink.com'
         )
         self.item2.save()
 
@@ -72,7 +74,8 @@ class WishlistModelTest(TestCase):
             name='testitem3',
             price=119.99,
             description='Item 3',
-            category='testcategory'
+            category='testcategory',
+            url='linkthree.com'
         )
         self.wishlist.items.append(new_item)
         self.wishlist.save()
@@ -179,7 +182,8 @@ class WishlistViewTest(TestCase):
             name='testitem1',
             price=19.99,
             description='Item 1',
-            category='testcategory'
+            category='testcategory',
+            url='routeTest1.com'
         )
         self.item1.save()
         self.item2 = Items(
@@ -187,7 +191,8 @@ class WishlistViewTest(TestCase):
             name='testitem2',
             price=49.99,
             description='Item 2',
-            category='testcategory'
+            category='testcategory',
+            url='routeTest2.com'
         )
         self.item2.save()
 
