@@ -32,9 +32,14 @@ def getItem(request):
 
 @api_view(['GET'])
 def getItemByName(request):
-    item_info = request.data
-    item = Items.objects(name=item_info["name"]).first()
-    
+    item_name = request.GET.get('name')  
+    if not item_name:
+        return Response({"error": "Item name is required"}, status=400)  
+
+    item = Items.objects(name=item_name).first()  
+    if not item:
+        return Response({"error": "Item not found"}, status=404)  
+
     item_data = ItemsSerializer(item)
     return Response(item_data.data)
 
