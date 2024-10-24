@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'items.apps.ItemsConfig',
     'wishlists.apps.WishlistsConfig',
-    'demo.apps.DemoConfig'
+    'demo.apps.DemoConfig',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
