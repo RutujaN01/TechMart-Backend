@@ -4,6 +4,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 from decimal import Decimal
 
@@ -98,18 +102,21 @@ def create_item(request):
 @api_view(['PATCH'])
 # @permission_classes([IsAuthenticated])
 def update_item(request):
-    # item_id = request.GET.get('id')
     item_data = request.data
-    item = Items.objects(id=item_data["id"]).first()
+    logger.info(f"Updating item with data: {item_data}")
 
+    item = Items.objects(id=item_data.get("id")).first()
     if not item:
+        logger.warning("Item not found")
         return Response({"error": "Item not found"}, status=404)
 
     item_info = ItemsSerializer(item, data=request.data, partial=True)
     if item_info.is_valid():
         item_info.save()
+        logger.info("Item updated successfully")
         return Response(item_info.data, status=200)
     else:
+        logger.error(f"Validation errors: {item_info.errors}")
         return Response(item_info.errors, status=400)
 
 
