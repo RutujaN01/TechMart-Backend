@@ -35,12 +35,12 @@ def getItem(request):
 
 
 @api_view(['GET'])
-def getItemByName(request):
-    item_name = request.GET.get('name')  
+def getItemByName(request, item_name):
+    print(item_name)
     if not item_name:
         return Response({"error": "Item name is required"}, status=400)  
 
-    item = Items.objects(name=item_name).first()  
+    item = Items.objects(name__icontains = item_name).first()
     if not item:
         return Response({"error": "Item not found"}, status=404)  
 

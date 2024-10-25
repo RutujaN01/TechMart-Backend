@@ -9,7 +9,7 @@ urlpatterns = [
     path('remove/item', delete_item, name='Delete Item'),
     path('update/item', update_item, name='Update Item'),
     path('getItem/item', getItem, name = 'Get specifit Item'),
-    path('searchName/item', getItemByName, name = 'Get Item by name'),
+    path('searchName/<str:item_name>', getItemByName, name = 'Get Item by name'),
     path('searchCat/item', getItemsByCat, name = 'Get Items by cat'),
 
 ]
