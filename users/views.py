@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from decorators import admin_route
+from wishlists.models import Wishlists
 from .models import User, Token
 from .serializers import UserSerializer
 
@@ -20,6 +21,9 @@ def create_user(request):
     # Save the user to the database
     try:
         user.save()
+        default_wishlist = Wishlists(name=f"Default For {user.username}", user=user)
+        print(default_wishlist.user.username)
+        default_wishlist.save()
     except NotUniqueError:
         # If the user already exists, return an error
         return Response({"error": "User already exists with that information"}, status=400)
